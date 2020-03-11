@@ -9,13 +9,38 @@ class ArticlesController < ApplicationController
 	end
 
 	def new
+		@article = Article.new
+	end
+
+	def edit
+		@article = Article.find(params[:id])
 	end
 
 	def create
 		@article = Article.new(article_params)
 
-		@article.save
-		redirect_to @article
+		if @article.save
+			redirect_to @article # redirect_to will tell the browser to issue another request
+		else
+			render 'new' # This rendering is done within the same request as the form submission
+		end
+	end
+
+	def update
+		@article = Article.find(params[:id])
+
+		if @article.update(article_params)
+			redirect_to @article
+		else
+			render 'edit'
+		end
+	end
+
+	def destroy
+		@article = Article.find(params[:id])
+		@article.destroy
+		
+		redirect_to articles_path
 	end
 
 	protected
